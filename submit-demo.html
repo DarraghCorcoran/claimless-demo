@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Claimless - Submit a Claim (Demo)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --bg-alt: #ffffff;
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --text: #111827;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #22c55e;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.07);
+      --max-width: 960px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0f2fe 0, #f5f7fb 42%, #ffffff 100%);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    main {
+      padding-top: 72px;
+    }
+
+    .page {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 20px 64px;
+    }
+
+    /* Header (similar style to main site) */
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      backdrop-filter: blur(16px);
+      background: rgba(248, 250, 252, 0.92);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+      z-index: 50;
+    }
+
+    .header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 14px;
+      background: conic-gradient(from 160deg, #2563eb, #22c55e, #0ea5e9, #6366f1, #2563eb);
+      padding: 2px;
+      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.4);
+    }
+
+    .brand-mark-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      background: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: #2563eb;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-text span:first-child {
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      font-size: 18px;
+    }
+
+    .brand-text span:last-child {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 14px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .nav-link {
+      padding: 4px 0;
+      color: var(--text-muted);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      height: 2px;
+      width: 0;
+      background: linear-gradient(90deg, #2563eb, #22c55e);
+      border-radius: 999px;
+      transition: width 0.18s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--text);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-link.active {
+      color: var(--text);
+    }
+
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      font-size: 13px;
+      color: var(--text);
+      background: linear-gradient(to bottom right, #ffffff, #e5edff);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-cta span {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+    }
+
+    .nav-cta strong {
+      font-weight: 600;
+    }
+
+    .nav-toggle {
+      display: none;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .nav-toggle span {
+      width: 18px;
+      height: 2px;
+      background: #0f172a;
+      display: block;
+      border-radius: 999px;
+      position: relative;
+    }
+
+    .nav-toggle span::before,
+    .nav-toggle span::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 18px;
+      height: 2px;
+      background: #0f172a;
+      border-radius: 999px;
+      transition: transform 0.16s ease, opacity 0.16s ease;
+    }
+
+    .nav-toggle span::before {
+      top: -5px;
+    }
+
+    .nav-toggle span::after {
+      top: 5px;
+    }
+
+    .nav-toggle.active span {
+      background: transparent;
+    }
+
+    .nav-toggle.active span::before {
+      transform: translateY(5px) rotate(45deg);
+    }
+
+    .nav-toggle.active span::after {
+      transform: translateY(-5px) rotate(-45deg);
+    }
+
+    @media (max-width: 800px) {
+      nav {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        padding: 10px 20px 12px;
+        background: rgba(248, 250, 252, 0.98);
+        border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        transform-origin: top;
+        transform: scaleY(0.7);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.14s ease, transform 0.14s ease;
+      }
+
+      nav.open {
+        opacity: 1;
+        transform: scaleY(1);
+        pointer-events: auto;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .nav-cta {
+        margin-top: 2px;
+      }
+
+      .nav-toggle {
+        display: inline-flex;
+      }
+    }
+
+    /* Hero / Intro */
+
+    .hero-demo {
+      padding: 36px 0 20px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px 4px 4px;
+      border-radius: 999px;
+      background: rgba(219, 234, 254, 0.85);
+      color: #1d4ed8;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .hero-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.25);
+    }
+
+    .hero-badge span {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    .hero-demo h1 {
+      font-size: clamp(26px, 3.4vw, 32px);
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .hero-demo h1 span {
+      background: linear-gradient(120deg, #2563eb, #22c55e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-demo p {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 640px;
+      margin-bottom: 18px;
+    }
+
+    .hero-note {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Stepper and form */
+
+    .demo-shell {
+      margin-top: 18px;
+    }
+
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .stepper-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .stepper-marker {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      border: 2px solid #d1d5db;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      background: #f9fafb;
+    }
+
+    .stepper-item.active .stepper-marker {
+      border-color: #2563eb;
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.16);
+    }
+
+    .stepper-item.completed .stepper-marker {
+      border-color: #22c55e;
+      background: #22c55e;
+      color: white;
+    }
+
+    .stepper-label {
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .stepper-label span.title {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #6b7280;
+    }
+
+    .stepper-label span.subtitle {
+      font-size: 11px;
+      color: #9ca3af;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stepper-rail {
+      height: 2px;
+      background: #e5e7eb;
+      flex: 1;
+      border-radius: 999px;
+      margin: 0 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stepper-rail-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0;
+      background: linear-gradient(90deg, #2563eb, #22c55e);
+      transition: width 0.2s ease;
+    }
+
+    .demo-card {
+      border-radius: 22px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      padding: 18px 16px 16px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .step-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .step-caption {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .step-body {
+      display: none;
+      margin-top: 6px;
+    }
+
+    .step-body.active {
+      display: block;
+    }
+
+    /* Step 1 - upload */
+
+    .upload-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.2fr);
+      gap: 16px;
+    }
+
+    .dropzone {
+      border-radius: 14px;
+      border: 1.5px dashed #cbd5f5;
+      background: #f9fbff;
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .dropzone.dragover {
+      border-color: #2563eb;
+      background: #eff6ff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.1);
+    }
+
+    .dropzone-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dropzone-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background: rgba(37, 99, 235, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #2563eb;
+    }
+
+    .dropzone-text {
+      font-size: 13px;
+    }
+
+    .dropzone-text strong {
+      font-weight: 600;
+    }
+
+    .dropzone-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .dropzone-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .btn-inline {
+      border-radius: 999px;
+      padding: 6px 12px;
+      border: 1px solid #cbd5f5;
+      background: #ffffff;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-inline span.icon {
+      font-size: 13px;
+    }
+
+    .upload-notes {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .file-list {
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 10px 10px 8px;
+      font-size: 12px;
+      max-height: 140px;
+      overflow-y: auto;
+      display: grid;
+      gap: 4px;
+    }
+
+    .file-list-header {
+      font-size: 11px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 4px;
+    }
+
+    .file-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .file-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      background: rgba(37, 99, 235, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #2563eb;
+      flex-shrink: 0;
+    }
+
+    .file-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-meta {
+      font-size: 11px;
+      color: #9ca3af;
+      flex-shrink: 0;
+    }
+
+    .file-empty {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    /* Step 2 - details */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 10px 16px;
+      margin-bottom: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 4px;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: #4b5563;
+    }
+
+    .field label span.helper {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-left: 4px;
+    }
+
+    .input,
+    .textarea {
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      padding: 8px 9px;
+      font-size: 13px;
+      background: #f9fafb;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 0;
+    }
+
+    .input:focus,
+    .textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
+      background: #ffffff;
+    }
+
+    .textarea {
+      min-height: 80px;
+    }
+
+    .form-row-full {
+      margin-bottom: 6px;
+    }
+
+    /* Step 3 - review */
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 16px;
+    }
+
+    .review-card {
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 10px 10px 8px;
+      font-size: 12px;
+    }
+
+    .review-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    .review-item {
+      margin-bottom: 4px;
+    }
+
+    .review-item span.label {
+      color: #6b7280;
+    }
+
+    .review-item span.value {
+      font-weight: 500;
+    }
+
+    .review-note {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 6px;
+    }
+
+    /* Step navigation buttons */
+
+    .step-footer {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .step-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      border: none;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.45);
+    }
+
+    .btn-primary span.icon {
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .btn-secondary {
+      border-radius: 999px;
+      padding: 8px 14px;
+      border: 1px solid #d1d5db;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #ffffff;
+      color: #374151;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-secondary span.icon {
+      font-size: 14px;
+    }
+
+    .btn-primary[disabled],
+    .btn-secondary[disabled] {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    /* Processing overlay */
+
+    .processing-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .processing-overlay.active {
+      display: flex;
+    }
+
+    .processing-card {
+      border-radius: 20px;
+      background: #020617;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 20px 18px 16px;
+      color: #e5e7eb;
+      max-width: 360px;
+      width: 90%;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.9);
+    }
+
+    .processing-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .processing-spinner {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 3px solid rgba(148, 163, 184, 0.4);
+      border-top-color: #38bdf8;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .processing-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .processing-sub {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+
+    .processing-steps {
+      font-size: 12px;
+      color: #d1d5db;
+      display: grid;
+      gap: 4px;
+    }
+
+    .processing-steps span {
+      position: relative;
+      padding-left: 14px;
+    }
+
+    .processing-steps span::before {
+      content: "•";
+      position: absolute;
+      left: 2px;
+      color: #38bdf8;
+    }
+
+    /* Success view */
+
+    .success-screen {
+      display: none;
+      margin-top: 18px;
+    }
+
+    .success-screen.active {
+      display: block;
+    }
+
+    .success-card {
+      border-radius: 22px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      padding: 18px 16px 16px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .success-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .success-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #16a34a;
+      font-size: 18px;
+    }
+
+    .success-text {
+      display: grid;
+      gap: 2px;
+    }
+
+    .success-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .success-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .success-body {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      display: grid;
+      gap: 8px;
+    }
+
+    .success-columns {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    .success-col {
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 10px 10px 8px;
+      font-size: 12px;
+    }
+
+    .success-col-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    .success-col p {
+      margin-bottom: 4px;
+    }
+
+    .success-note {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 8px;
+    }
+
+    .success-actions {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .success-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn-download {
+      border-radius: 999px;
+      padding: 8px 14px;
+      border: 1px solid #d1d5db;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #ffffff;
+      color: #111827;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-download span.icon {
+      font-size: 14px;
+    }
+
+    .success-home {
+      font-size: 12px;
+      color: #4b5563;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .success-home span.icon {
+      font-size: 14px;
+    }
+
+    /* Footer */
+
+    footer {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 10px 20px 26px;
+      font-size: 11px;
+      color: #9ca3af;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    footer span strong {
+      color: #4b5563;
+    }
+
+    /* Responsive tweaks */
+
+    @media (max-width: 720px) {
+      .upload-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .review-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .form-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .success-columns {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stepper {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .stepper-item {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">
+        <div class="brand-mark-inner">C</div>
+      </div>
+      <div class="brand-text">
+        <span>Claimless</span>
+        <span>Vendor first travel & spend</span>
+      </div>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span></span>
+    </button>
+
+    <nav>
+      <div class="nav-links">
+        <a class="nav-link" href="index.html#problem">Problem</a>
+        <a class="nav-link" href="index.html#solution">Solution</a>
+        <a class="nav-link" href="index.html#workflow">Workflow</a>
+        <a class="nav-link" href="index.html#benefits">Benefits</a>
+        <a class="nav-link active" href="submit-demo.html">Submit a Claim (Demo)</a>
+        <a class="nav-link" href="index.html#contact">Contact</a>
+      </div>
+      <button class="nav-cta" type="button" onclick="window.location.href='index.html'">
+        <span>Prototype</span>
+        <strong>Back to overview</strong>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="page">
+    <section class="hero-demo">
+      <div class="hero-badge">
+        <div class="hero-dot"></div>
+        <span>Live demo simulation</span>
+      </div>
+      <h1>
+        Submit a Claim <span>(Demo only)</span>
+      </h1>
+      <p>
+        This walk through simulates how an employee would send a pre approved trip or purchase to Claimless. Nothing
+        is stored or transmitted. It is designed only to help investors and stakeholders feel the flow.
+      </p>
+      <div class="hero-note">
+        Upload sample approvals or quotes, enter mock details, then watch Claimless process everything as a vendor.
+      </div>
+    </section>
+
+    <!-- Multi step demo -->
+    <section class="demo-shell" id="demo-root">
+      <!-- Stepper -->
+      <div class="stepper" aria-label="Submission steps">
+        <div class="stepper-item" data-step="1">
+          <div class="stepper-marker">1</div>
+          <div class="stepper-label">
+            <span class="title">Upload</span>
+            <span class="subtitle">Approval & supplier quotes</span>
+          </div>
+        </div>
+        <div class="stepper-rail">
+          <div class="stepper-rail-fill" id="stepper-rail-fill"></div>
+        </div>
+        <div class="stepper-item" data-step="2">
+          <div class="stepper-marker">2</div>
+          <div class="stepper-label">
+            <span class="title">Details</span>
+            <span class="subtitle">Who you are and what this is for</span>
+          </div>
+        </div>
+        <div class="stepper-rail">
+          <div class="stepper-rail-fill"></div>
+        </div>
+        <div class="stepper-item" data-step="3">
+          <div class="stepper-marker">3</div>
+          <div class="stepper-label">
+            <span class="title">Review</span>
+            <span class="subtitle">Confirm then submit for verification</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card container -->
+      <div class="demo-card">
+        <!-- Step 1 -->
+        <div class="step-body active" id="step-1">
+          <div class="step-header">
+            <div>
+              <div class="step-title">Step 1 - Upload approval and quotes</div>
+              <div class="step-caption">
+                Drag in a grant approval email export, PDF, or screenshots of supplier quotes. In production, Claimless would parse these and verify them with your finance team.
+              </div>
+            </div>
+          </div>
+
+          <div class="upload-layout">
+            <div>
+              <div class="dropzone" id="dropzone">
+                <div class="dropzone-header">
+                  <div class="dropzone-icon">⇪</div>
+                  <div class="dropzone-text">
+                    <strong>Drop files here</strong> or click to upload
+                    <div class="dropzone-sub">
+                      Approvals, quotes, emails - anything that shows what was agreed and with whom.
+                    </div>
+                  </div>
+                </div>
+                <div class="dropzone-actions">
+                  <button class="btn-inline" type="button" id="browse-files">
+                    <span class="icon">📁</span>
+                    <span>Browse files</span>
+                  </button>
+                  <span>Accepted types: PDF, images, or text for demo purposes.</span>
+                </div>
+              </div>
+              <div class="upload-notes">
+                Files never leave your browser in this demo. They are stored only in memory to build the on screen summary.
+              </div>
+              <input type="file" id="file-input" multiple accept=".pdf,.png,.jpg,.jpeg,.gif,.txt,.doc,.docx,.eml,.msg" style="display:none" />
+            </div>
+
+            <div>
+              <div class="file-list" id="file-list">
+                <div class="file-list-header">Uploaded files (demo only)</div>
+                <div class="file-empty" id="file-empty">
+                  No files yet. Add at least one approval or quote to see how Claimless will reference it in the review step.
+                </div>
+                <div id="file-rows"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-footer">
+            <div class="step-buttons">
+              <button class="btn-secondary" type="button" disabled>
+                <span class="icon">←</span>
+                <span>Back</span>
+              </button>
+              <button class="btn-primary" type="button" id="next-from-1">
+                <span>Next - Claim details</span>
+                <span class="icon">→</span>
+              </button>
+            </div>
+            <div>
+              You can continue without files but uploading them gives a more realistic demo.
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-body" id="step-2">
+          <div class="step-header">
+            <div>
+              <div class="step-title">Step 2 - Enter claim details</div>
+              <div class="step-caption">
+                These fields represent what Claimless would ask an employee so that finance and procurement can verify and issue a PO.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="employee-name">Employee name</label>
+              <input id="employee-name" class="input" type="text" placeholder="Jane Doe" />
+            </div>
+            <div class="field">
+              <label for="employee-email">Employee email</label>
+              <input id="employee-email" class="input" type="email" placeholder="jane.doe@example.edu" />
+            </div>
+            <div class="field">
+              <label for="employer">Employer or organisation</label>
+              <input id="employer" class="input" type="text" placeholder="University or company name" />
+            </div>
+            <div class="field">
+              <label for="approver-email">Manager or approver email <span class="helper">(for verification)</span></label>
+              <input id="approver-email" class="input" type="email" placeholder="manager@example.edu" />
+            </div>
+          </div>
+
+          <div class="field form-row-full">
+            <label for="description">Travel or purchase description</label>
+            <textarea id="description" class="textarea" placeholder="For example: Conference travel to Berlin including flights, hotel, and registration."></textarea>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="dates">Proposed dates</label>
+              <input id="dates" class="input" type="text" placeholder="14 to 18 March 2026" />
+            </div>
+            <div class="field">
+              <label for="cost">Total estimated cost</label>
+              <input id="cost" class="input" type="text" placeholder="€1,250" />
+            </div>
+          </div>
+
+          <div class="step-footer">
+            <div class="step-buttons">
+              <button class="btn-secondary" type="button" id="back-from-2">
+                <span class="icon">←</span>
+                <span>Back</span>
+              </button>
+              <button class="btn-primary" type="button" id="next-from-2">
+                <span>Next - Review and submit</span>
+                <span class="icon">→</span>
+              </button>
+            </div>
+            <div>
+              No validation is enforced in this demo. In a real deployment, each field would be checked before submission.
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-body" id="step-3">
+          <div class="step-header">
+            <div>
+              <div class="step-title">Step 3 - Review and submit</div>
+              <div class="step-caption">
+                Confirm what you are sending to Claimless. In production, this is where the request would be routed to finance or procurement for PO creation.
+              </div>
+            </div>
+          </div>
+
+          <div class="review-grid">
+            <div class="review-card">
+              <div class="review-title">Files referenced in this request</div>
+              <div id="review-files"></div>
+              <div class="review-note">
+                Claimless does not store or read files in this demo. It simply shows how many items an employee would send for verification.
+              </div>
+            </div>
+            <div class="review-card">
+              <div class="review-title">Claimless vendor request snapshot</div>
+              <div id="review-details"></div>
+              <div class="review-note">
+                This data would be attached to the employer PO and used to generate bookings, confirmations, and ERR compliant receipts.
+              </div>
+            </div>
+          </div>
+
+          <div class="step-footer">
+            <div class="step-buttons">
+              <button class="btn-secondary" type="button" id="back-from-3">
+                <span class="icon">←</span>
+                <span>Back</span>
+              </button>
+              <button class="btn-primary" type="button" id="submit-demo">
+                <span>Submit claim for verification (demo)</span>
+                <span class="icon">▶</span>
+              </button>
+            </div>
+            <div>
+              This is a simulation only. Nothing is sent to Claimless or to any external service.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Success screen (hidden at first) -->
+      <section class="success-screen" id="success-screen" aria-live="polite">
+        <div class="success-card">
+          <div class="success-header">
+            <div class="success-icon">✓</div>
+            <div class="success-text">
+              <div class="success-title">Your Claimless demo submission has been received</div>
+              <div class="success-sub">
+                This is a simulation. In a live environment, Claimless would now move from approval to PO and real bookings.
+              </div>
+            </div>
+          </div>
+
+          <div class="success-body">
+            <p>
+              Based on the information you entered, Claimless would verify the approval with the named approver and finance team, secure a Purchase Order, and then book travel or purchases exactly in line with the agreed quotes.
+            </p>
+            <div class="success-columns">
+              <div class="success-col">
+                <div class="success-col-title">What happens next in real life</div>
+                <p>1. Claimless verifies details with the manager or approver and finance or procurement.</p>
+                <p>2. Your organisation issues a PO to Claimless as a standard vendor.</p>
+                <p>3. Claimless books travel or goods, sends confirmations to the employee, and generates ERR formatted receipts.</p>
+              </div>
+              <div class="success-col">
+                <div class="success-col-title">What this demo is doing</div>
+                <p>1. Holds your data in memory only to build a PDF style preview.</p>
+                <p>2. Lets you download mock documents that show what the employee and finance might see.</p>
+                <p>3. Shows how this fits cleanly into existing vendor and PO based workflows.</p>
+              </div>
+            </div>
+            <div class="success-note">
+              The mock downloads contain only the text you have entered and a simple summary header. They are not real booking confirmations or receipts.
+            </div>
+          </div>
+
+          <div class="success-actions">
+            <div class="success-buttons">
+              <button class="btn-download" type="button" id="download-booking">
+                <span class="icon">⬇</span>
+                <span>Download employee booking preview</span>
+              </button>
+              <button class="btn-download" type="button" id="download-err">
+                <span class="icon">⬇</span>
+                <span>Download ERR receipt packet</span>
+              </button>
+            </div>
+            <div class="success-home" onclick="window.location.href='index.html'">
+              <span class="icon">←</span>
+              <span>Return to home page overview</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <span><strong>Claimless</strong> demo submission flow. All actions are simulated in the browser only.</span>
+  <span>No data is sent to a server. Use with sample approvals and dummy details.</span>
+</footer>
+
+<!-- Processing overlay -->
+<div class="processing-overlay" id="processing-overlay" aria-hidden="true">
+  <div class="processing-card">
+    <div class="processing-header">
+      <div class="processing-spinner"></div>
+      <div>
+        <div class="processing-title">Processing your Claimless demo</div>
+        <div class="processing-sub">This simulates the verification and PO generation step.</div>
+      </div>
+    </div>
+    <div class="processing-steps">
+      <span>Verifying approval and quotes with internal approver.</span>
+      <span>Contacting employer finance or procurement to confirm budget.</span>
+      <span>Preparing a compliance ready packet and draft vendor invoice.</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    // Mobile nav
+    const toggle = document.querySelector(".nav-toggle");
+    const nav = document.querySelector("header nav");
+    if (toggle && nav) {
+      toggle.addEventListener("click", function () {
+        const isActive = toggle.classList.toggle("active");
+        nav.classList.toggle("open", isActive);
+      });
+      nav.addEventListener("click", function (event) {
+        if (event.target.matches("a.nav-link")) {
+          toggle.classList.remove("active");
+          nav.classList.remove("open");
+        }
+      });
+    }
+
+    // Multi step state
+    let currentStep = 1;
+    const totalSteps = 3;
+
+    const stepBodies = {
+      1: document.getElementById("step-1"),
+      2: document.getElementById("step-2"),
+      3: document.getElementById("step-3")
+    };
+
+    const stepperItems = document.querySelectorAll(".stepper-item");
+    const mainRailFill = document.getElementById("stepper-rail-fill");
+
+    function updateStepper() {
+      stepperItems.forEach(item => {
+        const step = Number(item.getAttribute("data-step"));
+        item.classList.remove("active", "completed");
+        if (step === currentStep) {
+          item.classList.add("active");
+        } else if (step < currentStep) {
+          item.classList.add("completed");
+        }
+      });
+
+      const progress = (currentStep - 1) / (totalSteps - 1);
+      if (mainRailFill) {
+        mainRailFill.style.width = (progress * 100) + "%";
+      }
+    }
+
+    function showStep(step) {
+      currentStep = step;
+      Object.keys(stepBodies).forEach(key => {
+        const body = stepBodies[key];
+        if (!body) return;
+        body.classList.toggle("active", Number(key) === currentStep);
+      });
+      updateStepper();
+    }
+
+    // File handling demo
+    const dropzone = document.getElementById("dropzone");
+    const browseButton = document.getElementById("browse-files");
+    const fileInput = document.getElementById("file-input");
+    const fileRowsContainer = document.getElementById("file-rows");
+    const fileEmpty = document.getElementById("file-empty");
+
+    /** @type {File[]} */
+    let uploadedFiles = [];
+
+    function renderFileList() {
+      if (!fileRowsContainer || !fileEmpty) return;
+      fileRowsContainer.innerHTML = "";
+      if (uploadedFiles.length === 0) {
+        fileEmpty.style.display = "block";
+        return;
+      }
+      fileEmpty.style.display = "none";
+      uploadedFiles.forEach(file => {
+        const row = document.createElement("div");
+        row.className = "file-row";
+        const info = document.createElement("div");
+        info.className = "file-info";
+        const icon = document.createElement("div");
+        icon.className = "file-icon";
+        icon.textContent = "⧉";
+        const name = document.createElement("div");
+        name.className = "file-name";
+        name.textContent = file.name;
+        info.appendChild(icon);
+        info.appendChild(name);
+
+        const meta = document.createElement("div");
+        meta.className = "file-meta";
+        const sizeKb = Math.max(1, Math.round(file.size / 1024));
+        meta.textContent = sizeKb + " KB";
+
+        row.appendChild(info);
+        row.appendChild(meta);
+        fileRowsContainer.appendChild(row);
+      });
+    }
+
+    function handleFiles(files) {
+      if (!files || files.length === 0) return;
+      uploadedFiles = uploadedFiles.concat(Array.from(files));
+      renderFileList();
+    }
+
+    if (browseButton && fileInput) {
+      browseButton.addEventListener("click", function () {
+        fileInput.click();
+      });
+      fileInput.addEventListener("change", function (event) {
+        handleFiles(event.target.files);
+      });
+    }
+
+    if (dropzone) {
+      ["dragenter", "dragover"].forEach(evt => {
+        dropzone.addEventListener(evt, function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.add("dragover");
+        });
+      });
+
+      ["dragleave", "drop"].forEach(evt => {
+        dropzone.addEventListener(evt, function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (evt !== "drop") {
+            dropzone.classList.remove("dragover");
+          }
+        });
+      });
+
+      dropzone.addEventListener("drop", function (e) {
+        dropzone.classList.remove("dragover");
+        if (e.dataTransfer && e.dataTransfer.files) {
+          handleFiles(e.dataTransfer.files);
+        }
+      });
+
+      dropzone.addEventListener("click", function () {
+        if (fileInput) fileInput.click();
+      });
+    }
+
+    // Step buttons
+    const nextFrom1 = document.getElementById("next-from-1");
+    const nextFrom2 = document.getElementById("next-from-2");
+    const backFrom2 = document.getElementById("back-from-2");
+    const backFrom3 = document.getElementById("back-from-3");
+    const submitDemoBtn = document.getElementById("submit-demo");
+
+    if (nextFrom1) {
+      nextFrom1.addEventListener("click", function () {
+        showStep(2);
+      });
+    }
+
+    if (backFrom2) {
+      backFrom2.addEventListener("click", function () {
+        showStep(1);
+      });
+    }
+
+    if (nextFrom2) {
+      nextFrom2.addEventListener("click", function () {
+        populateReview();
+        showStep(3);
+      });
+    }
+
+    if (backFrom3) {
+      backFrom3.addEventListener("click", function () {
+        showStep(2);
+      });
+    }
+
+    // Review population
+    const reviewFilesEl = document.getElementById("review-files");
+    const reviewDetailsEl = document.getElementById("review-details");
+
+    function getFieldValue(id) {
+      const el = document.getElementById(id);
+      return el && "value" in el ? el.value.trim() : "";
+    }
+
+    function populateReview() {
+      if (reviewFilesEl) {
+        reviewFilesEl.innerHTML = "";
+        if (uploadedFiles.length === 0) {
+          const p = document.createElement("div");
+          p.textContent = "No files uploaded in this demo. Claimless can still proceed, but in production files would usually be attached for verification.";
+          reviewFilesEl.appendChild(p);
+        } else {
+          const list = document.createElement("div");
+          uploadedFiles.forEach((file, index) => {
+            const item = document.createElement("div");
+            item.className = "review-item";
+            const label = document.createElement("span");
+            label.className = "label";
+            label.textContent = "File " + (index + 1) + ": ";
+            const val = document.createElement("span");
+            val.className = "value";
+            const sizeKb = Math.max(1, Math.round(file.size / 1024));
+            val.textContent = file.name + " (" + sizeKb + " KB)";
+            item.appendChild(label);
+            item.appendChild(val);
+            list.appendChild(item);
+          });
+          reviewFilesEl.appendChild(list);
+        }
+      }
+
+      if (reviewDetailsEl) {
+        reviewDetailsEl.innerHTML = "";
+        const fields = [
+          { label: "Employee", value: getFieldValue("employee-name") || "Not specified" },
+          { label: "Employee email", value: getFieldValue("employee-email") || "Not specified" },
+          { label: "Employer or organisation", value: getFieldValue("employer") || "Not specified" },
+          { label: "Manager or approver email", value: getFieldValue("approver-email") || "Not specified" },
+          { label: "Travel or purchase description", value: getFieldValue("description") || "Not specified" },
+          { label: "Proposed dates", value: getFieldValue("dates") || "Not specified" },
+          { label: "Total estimated cost", value: getFieldValue("cost") || "Not specified" }
+        ];
+        fields.forEach(f => {
+          const item = document.createElement("div");
+          item.className = "review-item";
+          const label = document.createElement("span");
+          label.className = "label";
+          label.textContent = f.label + ": ";
+          const val = document.createElement("span");
+          val.className = "value";
+          val.textContent = f.value;
+          item.appendChild(label);
+          item.appendChild(val);
+          reviewDetailsEl.appendChild(item);
+        });
+      }
+    }
+
+    // Processing and success
+    const processingOverlay = document.getElementById("processing-overlay");
+    const successScreen = document.getElementById("success-screen");
+    const demoRoot = document.getElementById("demo-root");
+
+    function showProcessing() {
+      if (processingOverlay) {
+        processingOverlay.classList.add("active");
+        processingOverlay.setAttribute("aria-hidden", "false");
+      }
+    }
+
+    function hideProcessing() {
+      if (processingOverlay) {
+        processingOverlay.classList.remove("active");
+        processingOverlay.setAttribute("aria-hidden", "true");
+      }
+    }
+
+    function showSuccess() {
+      if (demoRoot && successScreen) {
+        // Hide the multi step card, show success section
+        const card = demoRoot.querySelector(".demo-card");
+        if (card) card.style.display = "none";
+        successScreen.classList.add("active");
+      }
+    }
+
+    if (submitDemoBtn) {
+      submitDemoBtn.addEventListener("click", function () {
+        showProcessing();
+        setTimeout(function () {
+          hideProcessing();
+          showSuccess();
+        }, 3000);
+      });
+    }
+
+    // Downloads
+    function buildSummaryText(title) {
+      const lines = [];
+      lines.push("Claimless Demo Document");
+      lines.push("======================");
+      lines.push("");
+      lines.push(title);
+      lines.push("");
+      lines.push("Employee: " + (getFieldValue("employee-name") || "Not specified"));
+      lines.push("Employee email: " + (getFieldValue("employee-email") || "Not specified"));
+      lines.push("Employer or organisation: " + (getFieldValue("employer") || "Not specified"));
+      lines.push("Manager or approver email: " + (getFieldValue("approver-email") || "Not specified"));
+      lines.push("");
+      lines.push("Travel or purchase description:");
+      lines.push(getFieldValue("description") || "Not specified");
+      lines.push("");
+      lines.push("Proposed dates: " + (getFieldValue("dates") || "Not specified"));
+      lines.push("Total estimated cost: " + (getFieldValue("cost") || "Not specified"));
+      lines.push("");
+      lines.push("Attached approvals and quotes in this demo:");
+      if (uploadedFiles.length === 0) {
+        lines.push("- No files attached in this demo session");
+      } else {
+        uploadedFiles.forEach((file, index) => {
+          const sizeKb = Math.max(1, Math.round(file.size / 1024));
+          lines.push("- File " + (index + 1) + ": " + file.name + " (" + sizeKb + " KB)");
+        });
+      }
+      lines.push("");
+      lines.push("Note: This file is generated entirely in your browser as part of the Claimless demo.");
+      lines.push("It is not a real booking confirmation or a real ERR compliant receipt packet.");
+      return lines.join("\n");
+    }
+
+    function downloadMockFile(filename, title) {
+      const content = buildSummaryText(title);
+      const blob = new Blob([content], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    const downloadBookingBtn = document.getElementById("download-booking");
+    const downloadErrBtn = document.getElementById("download-err");
+
+    if (downloadBookingBtn) {
+      downloadBookingBtn.addEventListener("click", function () {
+        downloadMockFile("claimless_booking_preview.pdf", "Employee booking preview (demo)");
+      });
+    }
+
+    if (downloadErrBtn) {
+      downloadErrBtn.addEventListener("click", function () {
+        downloadMockFile("claimless_err_packet_demo.pdf", "ERR compliant receipt packet (demo)");
+      });
+    }
+
+    // Initial state
+    showStep(1);
+  })();
+</script>
+</body>
+</html>
